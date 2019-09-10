@@ -8,9 +8,9 @@
             "program": "${command:cmake.launchTargetPath}",
             "args": ["roms/BRIX"],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}\\build",
             "environment": [],
-            "externalConsole": false
+            "externalConsole": false,
         }
     ]
 }
