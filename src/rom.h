@@ -7,7 +7,7 @@
 class Rom
 {
     public:
-        Rom(std::string romPath);
+        Rom(const std::string romPath);
 
         std::string romPath;
         long romLength;
