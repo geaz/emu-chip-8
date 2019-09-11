@@ -78,7 +78,7 @@ class Screen {
          endY = newEndY;
       }
 
-      void handleKeys(int key, int scancode, int action, int mods) {};
+      virtual void handleKeys(const int key, const int scancode, const int action, const int mods) {};
       virtual void draw() = 0;
 
       int row, column;

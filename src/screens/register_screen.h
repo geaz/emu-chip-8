@@ -10,7 +10,7 @@ class RegisterScreen : public Screen
     public:
         RegisterScreen(int row, int column, Chip8* chip8);
 
-        void draw();
+        void draw() override;
 
         Chip8* chip8;
 };

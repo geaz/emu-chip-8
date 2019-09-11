@@ -2,6 +2,9 @@
 #include <iomanip>
 #include <algorithm>
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "memory_screen.h"
 #include "../helper/string_helper.h"
 
@@ -26,5 +29,17 @@ void MemoryScreen::draw()
         float yOffset = (float) 45 + (20 * (i - memoryStart));
         drawText(20, yOffset, std::to_string(i), i == chip8->pc ? orange : gray);
         drawText(65, yOffset, StringHelper::IntToHexString(static_cast<int>(chip8->memory[i]), 2), offBlack);
+    }
+}
+
+void MemoryScreen::handleKeys(const int key, const int scancode, const int action, const int mods)
+{
+    if (key == GLFW_KEY_P && action == GLFW_RELEASE)
+    {
+        chip8->paused = !chip8->paused;
+    }
+    else if (key == GLFW_KEY_N && action == GLFW_RELEASE)
+    {
+        chip8->step = true;
     }
 }

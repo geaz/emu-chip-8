@@ -10,7 +10,7 @@ class Chip8Screen : public Screen
     public:
         Chip8Screen(int row, int column, Chip8* chip8);
 
-        void draw();
+        void draw() override;
 
         Chip8* chip8;
 };
