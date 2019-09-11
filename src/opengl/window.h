@@ -15,8 +15,8 @@ class Window
     public:        
         Window(const char* title, const int width, const int height);
         
-        const void setClearColor(const GLfloat red, const GLfloat green, const GLfloat blue, const GLfloat alpha);
-        const void startLoop();
+        void setClearColor(const GLfloat red, const GLfloat green, const GLfloat blue, const GLfloat alpha) const;
+        void startLoop() const;
 
         bool Window::addRowDefinition(const GridDefinition rowDefinition);
         bool Window::addColumnDefinition(const GridDefinition columnDefinition);
@@ -28,9 +28,10 @@ class Window
         static Window* windowPointer;
 
     private:
-        const void resize();
-        const std::vector<Screen*> getScreensInRow(const int row);
-        const int getMaxRowIndex();
+        void resize() const;
+        void handleKeys(const int key, const int scancode, const int action, const int mods) const;
+        std::vector<Screen*> getScreensInRow(const int row) const;
+        int getMaxRowIndex() const;
 
         GLFWwindow* window;
         std::vector<Screen*> screenVec;

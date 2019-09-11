@@ -35,18 +35,23 @@ Window::Window(const char* title, const int width, const int height)
             ResourceManager::ViewportHeight = height;
             Window::windowPointer->resize();
         });
+    glfwSetKeyCallback(window, 
+        [](GLFWwindow* window, int key, int scancode, int action, int mods)
+        {
+            Window::windowPointer->handleKeys(key, scancode, action, mods);
+        });
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
     {
         throw "Failed to initialize OpenGL context";
     }
 }
 
-const void Window::setClearColor(const GLfloat red, const GLfloat green, const GLfloat blue, const GLfloat alpha)
+void Window::setClearColor(const GLfloat red, const GLfloat green, const GLfloat blue, const GLfloat alpha) const
 {
     glClearColor(red, green, blue, alpha);
 }
 
-const void Window::startLoop()
+void Window::startLoop() const
 {
     while(!glfwWindowShouldClose(window))
     {
@@ -127,7 +132,7 @@ bool Window::addScreen(Screen* screen)
     return result;
 }
 
-const void Window::resize()
+void Window::resize() const
 {   
     float onePercentageWidth = ResourceManager::ViewportWidth / 100.0f;
     float onePercentageHeight = ResourceManager::ViewportHeight / 100.0f;
@@ -157,7 +162,15 @@ const void Window::resize()
     }
 }
 
-const std::vector<Screen*> Window::getScreensInRow(const int row)
+void Window::handleKeys(const int key, const int scancode, const int action, const int mods) const
+{
+    for(Screen* screen : screenVec)
+    {
+        screen->handleKeys(key, scancode, action, mods);
+    }
+}
+
+std::vector<Screen*> Window::getScreensInRow(const int row) const
 {
     std::vector<Screen*> screensInRow;
     for(Screen* registeredScreen : screenVec)
