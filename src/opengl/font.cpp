@@ -6,6 +6,9 @@
 
 Font::Font(const char* fontPath)
 {
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
     textShader = ResourceManager::LoadShader("TextShader", "shaders\\text.vshader", "shaders\\text.fshader");
 
     std::basic_ifstream<unsigned char> fontFile;
@@ -32,9 +35,6 @@ Font::Font(const char* fontPath)
 
 void Font::renderText(float x, float y, const char* text, const Color color)
 {    
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
     glBindVertexArray(VAO);
     glBindTexture(GL_TEXTURE_2D, ftex);
     

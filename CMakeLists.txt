@@ -4,6 +4,8 @@ project(emu-chip-8 VERSION 0.1.0)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-GLFW.txt)
 
 set(EMU_HEADERS
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/helper/string_helper.h
+
     ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/stb/stb_truetype.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/resource_manager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/structs.h
@@ -22,6 +24,8 @@ set(EMU_HEADERS
 
 set(EMU_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/glad/src/glad.c
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/helper/string_helper.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/resource_manager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/font.cpp

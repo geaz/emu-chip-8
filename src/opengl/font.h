@@ -19,6 +19,7 @@ class Font
     private:        
         GLuint ftex;
         Shader textShader;
+        unsigned int VBO, VAO;
         stbtt_bakedchar charData[96];
 };
 

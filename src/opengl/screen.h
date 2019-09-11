@@ -17,7 +17,11 @@ class Screen {
 
       Screen(int row,  int column) : row(row), column(column),
            screenShader("shaders\\screen.vshader", "shaders\\screen.fshader")
-      { 
+      {          
+         glGenVertexArrays(1, &VAO);
+         glGenBuffers(1, &VBO);
+         glGenBuffers(1, &EBO);
+
          setClearColor({ 0, 0, 0, 255});
       }
 
@@ -35,11 +39,6 @@ class Screen {
 
       void drawRect(float vertices[], unsigned int indices[], int sizeofVertices, int sizeofIndices, Shader shader)
       {
-         unsigned int VBO, VAO, EBO;
-         glGenVertexArrays(1, &VAO);
-         glGenBuffers(1, &VBO);
-         glGenBuffers(1, &EBO);
-
          glBindVertexArray(VAO);
 
          glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -100,6 +99,7 @@ class Screen {
       }
 
       Shader screenShader;
+      unsigned int VBO, VAO, EBO;
       float startX, startY, endX, endY; 
 };
 
