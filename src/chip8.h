@@ -18,7 +18,7 @@ class Chip8
 
         std::stack<int> stack;
 
-        int memOffset = 512; // 512bytes at the beginning of the memory contained the original interpreter
+        int roomStartMemory = 512; // 512bytes at the beginning of the memory contained the original interpreter
         int memorySize = 4096;
         unsigned char memory[4096]; // 4KB Ram
 
@@ -31,6 +31,9 @@ class Chip8
 
         unsigned char timerDelay;
         unsigned char timerSound; 
+
+        int currentOpcode;
+        bool opcodeError = false;
 
     private:
         void initOpCodes();

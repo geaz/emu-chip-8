@@ -10,7 +10,7 @@ Chip8::Chip8()
 
 void Chip8::loadRom(Rom rom)
 {
-    if(rom.romLength > memorySize - memOffset)
+    if(rom.romLength > memorySize - roomStartMemory)
     {
         std::cout << "Rom is to large!";
         return;
@@ -18,7 +18,7 @@ void Chip8::loadRom(Rom rom)
 
     for(int i = 0; i < rom.romLength; i++)
     {
-        memory[i + memOffset] = rom.content[i];
+        memory[i + roomStartMemory] = rom.content[i];
     }
     std::cout << "Rom loaded ... \n";
     pc = 512;
@@ -26,10 +26,20 @@ void Chip8::loadRom(Rom rom)
 
 void Chip8::processCycle()
 {
-    int opcode = memory[pc] << 8 | memory[pc + 1];
-    auto test = opcodeLookup[opcode & 0xF000];
-    opcodeLookup[opcode & 0xF000](opcode & 0x0FFF);
-    pc += 2;
+    if(!opcodeError)
+    {
+        currentOpcode = memory[pc] << 8 | memory[pc + 1];
+        if(opcodeLookup.find(currentOpcode & 0xF000) != opcodeLookup.end())
+        {
+            //auto test = opcodeLookup[opcode & 0xF000];
+            //opcodeLookup[opcode & 0xF000](opcode & 0x0FFF);
+            pc += 2;
+        }
+        else 
+        {
+            opcodeError = true;
+        }
+    }    
 }
 
 void Chip8::initOpCodes()
