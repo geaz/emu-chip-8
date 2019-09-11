@@ -5,6 +5,7 @@
 
 Chip8::Chip8()
 {
+    clearMemAndRegisters();    
     initOpCodes();
 }
 
@@ -28,11 +29,11 @@ void Chip8::processCycle()
 {
     if(!opcodeError)
     {
-        currentOpcode = memory[pc] << 8 | memory[pc + 1];
+        currentOpcode = memory[pc] << 8 | memory[pc + 1];        
         if(opcodeLookup.find(currentOpcode & 0xF000) != opcodeLookup.end())
         {
-            //auto test = opcodeLookup[opcode & 0xF000];
-            //opcodeLookup[opcode & 0xF000](opcode & 0x0FFF);
+            auto opcodeFunc = opcodeLookup[currentOpcode & 0xF000];
+            opcodeFunc(currentOpcode & 0x0FFF);
             pc += 2;
         }
         else 
@@ -40,6 +41,12 @@ void Chip8::processCycle()
             opcodeError = true;
         }
     }    
+}
+
+void Chip8::clearMemAndRegisters()
+{
+    memset(memory, 0, memorySize);
+    memset(registers, 0, 15);
 }
 
 void Chip8::initOpCodes()

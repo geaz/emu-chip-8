@@ -23,19 +23,20 @@ class Chip8
         unsigned char memory[4096]; // 4KB Ram
 
         unsigned short pc; // programm counter
-        unsigned short iRegister; // 1 16-Bit Register (short = 2 byte = 16 bit)
         unsigned char registers[15]; // 15 8-Bit Registers (1 char = 1 byte = 8 bit)
-        unsigned char flagRegister; // + 1 8-Bit Regsiter - forbidden to be used by programs
+        unsigned char flagRegister = 0; // + 1 8-Bit Regsiter - forbidden to be used by programs
+        unsigned short iRegister = 0; // 1 16-Bit Register (short = 2 byte = 16 bit)
 
         unsigned char pixels[64 * 32]; // state of the display pixels
 
-        unsigned char timerDelay;
-        unsigned char timerSound; 
+        unsigned char timerDelay = 0;
+        unsigned char timerSound = 0; 
 
-        int currentOpcode;
+        int currentOpcode = 0;
         bool opcodeError = false;
 
     private:
+        void clearMemAndRegisters();
         void initOpCodes();
 
         std::map<int, std::function<void(const int)>> opcodeLookup;
