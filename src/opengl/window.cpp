@@ -1,13 +1,17 @@
 #include <algorithm>
+
 #include "window.h"
+#include "resource_manager.h"
 
 // Init Window Pointer for OpenGL callbacks
 Window* Window::windowPointer = NULL;
 
-Window::Window(const char* title, const int width, const int height) : width(width), height(height)
+Window::Window(const char* title, const int width, const int height)
 {
     // Store Pointer for OpenGL callbacks
     windowPointer = this;
+    ResourceManager::ViewportWidth = width;
+    ResourceManager::ViewportHeight = height;
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -27,7 +31,9 @@ Window::Window(const char* title, const int width, const int height) : width(wid
         [](GLFWwindow *window, int width, int height) 
         { 
             glViewport(0, 0, width, height); 
-            Window::windowPointer->resize(width, height);
+            ResourceManager::ViewportWidth = width;
+            ResourceManager::ViewportHeight = height;
+            Window::windowPointer->resize();
         });
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
     {
@@ -121,17 +127,10 @@ bool Window::addScreen(Screen* screen)
     return result;
 }
 
-void Window::resize(const int newWidth, const int newHeight)
-{
-    width = newWidth;
-    height = newHeight;
-    resize();
-}
-
 const void Window::resize()
 {   
-    float onePercentageWidth = width / 100.0f;
-    float onePercentageHeight = height / 100.0f;
+    float onePercentageWidth = ResourceManager::ViewportWidth / 100.0f;
+    float onePercentageHeight = ResourceManager::ViewportHeight / 100.0f;
 
     float rowStartY = 0;
     for(int rowIndex = 0; rowIndex < (int) rowDefinitionVec.size(); rowIndex++)
@@ -146,12 +145,11 @@ const void Window::resize()
             GridDefinition columnDefinition = columnDefinitionVec.at(colIndex);
             float columnWidth = columnDefinition.sizePercentage * onePercentageWidth;
             
-            if(colIndex == (int) rowScreenVec.size() - 1 && columnWidth + columnStartX < width)
+            if(colIndex == (int) rowScreenVec.size() - 1 && columnWidth + columnStartX < ResourceManager::ViewportWidth)
             {
-                columnWidth = width - columnStartX;
+                columnWidth = ResourceManager::ViewportWidth - columnStartX;
             }
 
-            rowScreenVec.at(colIndex)->setCorrectionValues(width / 2, height / 2);
             rowScreenVec.at(colIndex)->setScreenCords(columnStartX, rowStartY, columnStartX + columnWidth, rowStartY + rowHeight);
             columnStartX += columnWidth;
         }        

@@ -5,14 +5,19 @@
 #define SHADER_H
 
 #include <glad/glad.h>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
+
 class Shader
 {
     public:
+        Shader() { }
+        
         Shader(const char* vertexPath, const char* fragmentPath)
         {
             std::string vertexCode;
@@ -98,6 +103,13 @@ class Shader
             int location = glGetUniformLocation(ID, name.c_str());
             glUseProgram(ID); 
             glUniform4f(location, value1, value2, value3, value4);
+        }
+
+        void setMatrix4(const std::string &name, const glm::mat4 &matrix)
+        {
+            int location = glGetUniformLocation(ID, name.c_str());
+            glUseProgram(ID); 
+            glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
         }
         
         unsigned int ID;

@@ -75,7 +75,9 @@
         "typeindex": "cpp",
         "unordered_set": "cpp",
         "valarray": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "cstdarg": "cpp",
+        "alignedvector3": "cpp"
     },
     "C_Cpp.configurationWarnings": "Disabled"
 }

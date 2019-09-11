@@ -22,17 +22,15 @@ class Window
         bool Window::addColumnDefinition(const GridDefinition columnDefinition);
         bool addScreen(Screen* screen);
 
-        int width, height;
         std::vector<GridDefinition> columnDefinitionVec;
         std::vector<GridDefinition> rowDefinitionVec;
 
         static Window* windowPointer;
 
     private:
-        void resize(const int newWidth, const int newHeight);
         const void resize();
         const std::vector<Screen*> getScreensInRow(const int row);
-        const int Window::getMaxRowIndex();
+        const int getMaxRowIndex();
 
         GLFWwindow* window;
         std::vector<Screen*> screenVec;
