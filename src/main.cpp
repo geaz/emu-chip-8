@@ -30,8 +30,8 @@ int main(int argc, char* argv[])
 
     Window window("CHIP-8", 864, 480);
     window.setClearColor(255, 255, 255, 255);
-    window.addColumnDefinition({ 0, 85.0f });
-    window.addColumnDefinition({ 1, 15.0f });
+    window.addColumnDefinition({ 0, 82.5f });
+    window.addColumnDefinition({ 1, 17.5f });
     window.addRowDefinition({ 0, 75.0f });
     window.addRowDefinition({ 1, 25.0f });
     

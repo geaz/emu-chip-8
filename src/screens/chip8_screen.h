@@ -11,8 +11,10 @@ class Chip8Screen : public Screen
         Chip8Screen(int row, int column, Chip8* chip8);
 
         void draw() override;
+        void drawPixelAt(const int x, const int y);
 
         Chip8* chip8;
+        Shader pixelShader;
 };
 
 #endif // CHIP8SCREEN_H

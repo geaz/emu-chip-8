@@ -18,7 +18,7 @@ class Chip8
 
         std::stack<int> stack;
 
-        int roomStartMemory = 512; // 512bytes at the beginning of the memory contained the original interpreter
+        int romStartMemory = 512; // 512bytes at the beginning of the memory contained the original interpreter
         int memorySize = 4096;
         unsigned char memory[4096]; // 4KB Ram
 
@@ -41,10 +41,10 @@ class Chip8
         void clearMemAndRegisters();
         void initOpCodes();
 
-        std::map<int, std::function<void(const int)>> opcodeLookup;
-        std::map<int, std::function<void()>> zeroOpcodeLookup;        
-        std::map<int, std::function<void(const int, const int)>> eighthOpcodeLookup;        
-        std::map<int, std::function<void(const int, const int)>> sixteenOpcodeLookup;
+        std::map<int, std::function<void(const int)>> opcodeMap;
+        std::map<int, std::function<void()>> opcodeMap0;        
+        std::map<int, std::function<void(const int, const int)>> opcodeMap8;        
+        std::map<int, std::function<void(const int)>> opcodeMapF;
 
         unsigned char chip8Fontset[80] =
         { 

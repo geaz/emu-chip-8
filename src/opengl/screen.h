@@ -55,8 +55,8 @@ class Screen {
             static_cast<GLfloat>(ResourceManager::ViewportWidth), 
             static_cast<GLfloat>(ResourceManager::ViewportHeight), 
             0.0f);
-         screenShader.use();
-         screenShader.setMatrix4("projection", projection);
+         shader.use();
+         shader.setMatrix4("projection", projection);
          
          glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
@@ -82,6 +82,7 @@ class Screen {
       virtual void draw() = 0;
 
       int row, column;
+      float startX, startY, endX, endY; 
 
    private:
       void drawBackground()
@@ -101,7 +102,6 @@ class Screen {
 
       Shader screenShader;
       unsigned int VBO, VAO, EBO;
-      float startX, startY, endX, endY; 
 };
 
 #endif // SCREEN_H
