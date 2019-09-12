@@ -29,9 +29,9 @@ void Chip8::processCycle()
 {
     if(!opcodeError && (!paused || step))
     {
-        currentOpcode = nextOpcode;       
-        if(opcodeMap.find(currentOpcode & 0xF000) != opcodeMap.end())
-        { 
+        try
+        {
+            currentOpcode = nextOpcode;       
             pc += 2; // Increment PC before executing Opcode function
             auto opcodeFunc = opcodeMap[currentOpcode & 0xF000];
             opcodeFunc(currentOpcode & 0x0FFF);
@@ -39,8 +39,9 @@ void Chip8::processCycle()
             nextOpcode = memory[pc] << 8 | memory[pc+1];
             step = false;
         }
-        else 
+        catch(const std::bad_function_call& e)
         {
+            std::cerr << e.what() << '\n';
             opcodeError = true;
             nextOpcode = 0;
         }
