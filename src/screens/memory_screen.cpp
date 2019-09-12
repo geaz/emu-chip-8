@@ -38,7 +38,7 @@ void MemoryScreen::handleKeys(const int key, const int scancode, const int actio
     {
         chip8->paused = !chip8->paused;
     }
-    else if (key == GLFW_KEY_N && action == GLFW_RELEASE)
+    else if (key == GLFW_KEY_N && action == GLFW_RELEASE && chip8->paused)
     {
         chip8->step = true;
     }

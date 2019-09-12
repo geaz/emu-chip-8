@@ -37,9 +37,8 @@ void Chip8::processCycle()
             auto opcodeFunc = opcodeLookup[currentOpcode & 0xF000];
             opcodeFunc(currentOpcode & 0x0FFF);
 
-            step = false;
-            pc += 2;
             nextOpcode = memory[pc] << 8 | memory[pc+1];
+            step = false;
         }
         else 
         {
@@ -60,38 +59,43 @@ void Chip8::initOpCodes()
 {
     srand((int) time(NULL));
 
-    zeroOpcodeLookup[0x00E0] = [this] { memset(pixels, 0, 64 * 32); }; // CLS
+    zeroOpcodeLookup[0x00E0] = [this] { memset(pixels, 0, 64 * 32); pc+=2; }; // CLS
     zeroOpcodeLookup[0x00EE] = [this] { pc = stack.top(); stack.pop(); }; // RET
 
-    eighthOpcodeLookup[0x0000] = [this](int x, int y) { registers[x] = registers[y]; };
-    eighthOpcodeLookup[0x0001] = [this](int x, int y) { registers[x] = registers[x] | registers[y]; };
-    eighthOpcodeLookup[0x0002] = [this](int x, int y) { registers[x] = registers[x] & registers[y]; };
-    eighthOpcodeLookup[0x0003] = [this](int x, int y) { registers[x] = registers[x] ^ registers[y]; };
+    eighthOpcodeLookup[0x0000] = [this](int x, int y) { registers[x] = registers[y]; pc+=2; };
+    eighthOpcodeLookup[0x0001] = [this](int x, int y) { registers[x] = registers[x] | registers[y]; pc+=2; };
+    eighthOpcodeLookup[0x0002] = [this](int x, int y) { registers[x] = registers[x] & registers[y]; pc+=2; };
+    eighthOpcodeLookup[0x0003] = [this](int x, int y) { registers[x] = registers[x] ^ registers[y]; pc+=2; };
     eighthOpcodeLookup[0x0004] = [this](int x, int y) 
     { 
         int result = registers[x] + registers[y]; 
         flagRegister = result > 0xFF ? 1 : 0;
         registers[x] = result & 0x00FF;
+        pc+=2;
     };
     eighthOpcodeLookup[0x0005] = [this](int x, int y) 
     { 
         flagRegister = registers[x] > registers[y] ? 1 : 0;
         registers[x] = registers[x] - registers[y];
+        pc+=2;
     };
     eighthOpcodeLookup[0x0006] = [this](int x, int y) 
     { 
         flagRegister = registers[x] & 0x0F ? 1 : 0;
         registers[x] = registers[x] / 2;
+        pc+=2;
     };
     eighthOpcodeLookup[0x0007] = [this](int x, int y)
     { 
         flagRegister = registers[y] > registers[x] ? 1 : 0;
         registers[x] = registers[y] - registers[x];
+        pc+=2;
     };
     eighthOpcodeLookup[0x000E] = [this](int x, int y) 
     {
         flagRegister = registers[x] & 0xF0 ? 1 : 0;
         registers[x] = registers[x] / 2;
+        pc+=2;
     };
 
     sixteenOpcodeLookup[0x007] = [this](int x, int code) { };
@@ -99,22 +103,23 @@ void Chip8::initOpCodes()
     opcodeLookup[0x0000] = [this](int i) { zeroOpcodeLookup[i](); };
     opcodeLookup[0x1000] = [this](int i) { pc = i; }; // JP addr
     opcodeLookup[0x2000] = [this](int i) { stack.push(pc); pc = i; }; // CALL addr
-    opcodeLookup[0x3000] = [this](int i) { if(registers[i & 0x0F00 >> 8] == (i & 0x00FF)) pc += 2; }; // SE Vx, byte
-    opcodeLookup[0x4000] = [this](int i) { if(registers[i & 0x0F00 >> 8] != (i & 0x00FF)) pc += 2; }; // SNE Vx, byte
-    opcodeLookup[0x5000] = [this](int i) { if(registers[i & 0x0F00 >> 8] == registers[i & 0x00F0]) pc += 2; }; // SE Vx, Vy
-    opcodeLookup[0x6000] = [this](int i) { registers[i & 0x0F00 >> 8] = i & 0x00FF; }; // LD Vx, byte
-    opcodeLookup[0x7000] = [this](int i) { registers[i & 0x0F00 >> 8] = registers[i & 0x0F00 >> 8] + (i & 0x00FF); }; // ADD Vx, byte
+    opcodeLookup[0x3000] = [this](int i) { if(registers[i & 0x0F00 >> 8] == (i & 0x00FF)) pc += 4; else pc += 2; }; // SE Vx, byte
+    opcodeLookup[0x4000] = [this](int i) { if(registers[i & 0x0F00 >> 8] != (i & 0x00FF)) pc += 4; else pc += 2; }; // SNE Vx, byte
+    opcodeLookup[0x5000] = [this](int i) { if(registers[i & 0x0F00 >> 8] == registers[i & 0x00F0]) pc += 4; else pc += 2; }; // SE Vx, Vy
+    opcodeLookup[0x6000] = [this](int i) { registers[i & 0x0F00 >> 8] = i & 0x00FF; pc+=2; }; // LD Vx, byte
+    opcodeLookup[0x7000] = [this](int i) { registers[i & 0x0F00 >> 8] = registers[i & 0x0F00 >> 8] + (i & 0x00FF); pc+=2; }; // ADD Vx, byte
     opcodeLookup[0x8000] = [this](int i) { eighthOpcodeLookup[i & 0x000F](i & 0x0F00 >> 8, i & 0x00F0 >> 4); };
-    opcodeLookup[0x9000] = [this](int i) { if(registers[i & 0x0F00 >> 8] != registers[i & 0x00F0 >> 4]) pc += 2; }; // SNE Vx, Vy
-    opcodeLookup[0xA000] = [this](int i) { iRegister = i & 0x0FFF; }; // LD I, addr
+    opcodeLookup[0x9000] = [this](int i) { if(registers[i & 0x0F00 >> 8] != registers[i & 0x00F0 >> 4]) pc += 4; else pc += 2; }; // SNE Vx, Vy
+    opcodeLookup[0xA000] = [this](int i) { iRegister = i & 0x0FFF; pc+=2; }; // LD I, addr
     opcodeLookup[0xB000] = [this](int i) { pc = (i & 0x0FFF) + registers[0]; }; // JP V0, addr
-    opcodeLookup[0xC000] = [this](int i) { int randomNumber = (rand() % 255) & (i & 0x00FF); registers[i & 0x0F00 >> 8] = randomNumber; }; // Cxkk - RND Vx, byte
+    opcodeLookup[0xC000] = [this](int i) { int randomNumber = (rand() % 255) & (i & 0x00FF); registers[i & 0x0F00 >> 8] = randomNumber; pc+=2; }; // Cxkk - RND Vx, byte
     opcodeLookup[0xD000] = [this](int i) // DRW Vx, Vy, nibble
     { 
         int x = (i & 0x0F00) >> 8;
         int y = (i & 0x00F0) >> 4;
         int n = (i & 0x000F);
+        pc+=2;
     };
-    //TODO opcodeLookup[0xE000] = [this](int i) { }; 
-    opcodeLookup[0xF000] = [this](int i) { sixteenOpcodeLookup[i & 0x00FF](i & 0x0F00 >> 8, i & 0x00FF); };
+    opcodeLookup[0xE000] = [this](int i) { }; 
+    opcodeLookup[0xF000] = [this](int i) { /*ixteenOpcodeLookup[i & 0x00FF](i & 0x0F00 >> 8, i & 0x00FF); pc+=2;*/ };
 }

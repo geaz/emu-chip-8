@@ -18,27 +18,27 @@ void RegisterScreen::draw()
     Color orange = { 255, 165, 0, 255};
     Color red = { 255, 0, 0, 255 };
 
-    drawText(5, 20, "Processed Opcode:", offBlack);
-    drawText(160, 20, StringHelper::IntToHexString(chip8->currentOpcode), blue);
+    drawText(5, 20, "PROCESSED OPCODE:", offBlack);
+    drawText(195, 20, StringHelper::IntToHexString(chip8->currentOpcode), blue);
 
-    drawText(230, 20, "Next Opcode:", offBlack);
-    drawText(345, 20, StringHelper::IntToHexString(chip8->nextOpcode), blue);
+    drawText(270, 20, "NEXT OPCODE:", offBlack);
+    drawText(400, 20, StringHelper::IntToHexString(chip8->nextOpcode), blue);
 
     if(chip8->opcodeError)
     {
-        drawText(420, 20, "OPCODE_ERROR", red);
+        drawText(480, 20, "OPCODE_ERROR", red);
     }
     else if(chip8->paused)
     {
-        drawText(420, 20, "PAUSED", orange);
+        drawText(480, 20, "PAUSED", orange);
     }
     else
     {
-        drawText(420, 20, "RUNNING", offBlack);
+        drawText(480, 20, "RUNNING", offBlack);
     }
 
-    drawText(5, 35, "------------------------------------------------"
-                    "------------------------------------------------", offBlack);
+    drawText(5, 35, "----------------------------------------------------"
+                    "----------------------------------------------------", offBlack);
     for(int i = 0; i <= 14; i++)
     {
         int x = 5 + (100 * (i / 3));
