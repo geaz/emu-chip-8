@@ -53,6 +53,7 @@ void Chip8::clearMemAndRegisters()
     memset(memory, 0, memorySize);
     memset(pixels, 0, 64 * 32);
     memset(registers, 0, 15);
+    memset(keys, 0, 15);
     memcpy(memory, chip8Fontset, sizeof(chip8Fontset));
 }
 
@@ -60,6 +61,48 @@ void Chip8::initOpCodes()
 {
     srand((int) time(NULL));
 
+    // Main Map
+    opcodeMap[0x0000] = [this](int i) { opcodeMap0[i](); };
+    opcodeMap[0x1000] = [this](int i) { pc = i; }; // JP addr
+    opcodeMap[0x2000] = [this](int i) { stack.push(pc); pc = i; }; // CALL addr
+    opcodeMap[0x3000] = [this](int i) { if(registers[(i & 0x0F00) >> 8] == (i & 0x00FF)) pc += 2; }; // SE Vx, byte
+    opcodeMap[0x4000] = [this](int i) { if(registers[(i & 0x0F00) >> 8] != (i & 0x00FF)) pc += 2; }; // SNE Vx, byte
+    opcodeMap[0x5000] = [this](int i) { if(registers[(i & 0x0F00) >> 8] == registers[(i & 0x00F0) >> 4]) pc += 2; }; // SE Vx, Vy
+    opcodeMap[0x6000] = [this](int i) { registers[(i & 0x0F00) >> 8] = i & 0x00FF; }; // LD Vx, byte
+    opcodeMap[0x7000] = [this](int i) { registers[(i & 0x0F00) >> 8] += i & 0x00FF; }; // ADD Vx, byte
+    opcodeMap[0x8000] = [this](int i) { opcodeMap8[i & 0x000F]((i & 0x0F00) >> 8, (i & 0x00F0) >> 4); };
+    opcodeMap[0x9000] = [this](int i) { if(registers[(i & 0x0F00) >> 8] != registers[(i & 0x00F0) >> 4]) pc += 2; }; // SNE Vx, Vy
+    opcodeMap[0xA000] = [this](int i) { iRegister = i & 0x0FFF; }; // LD I, addr
+    opcodeMap[0xB000] = [this](int i) { pc = (i & 0x0FFF) + registers[0]; }; // JP V0, addr
+    opcodeMap[0xC000] = [this](int i) { int randomNumber = (rand() % 255) & (i & 0x00FF); registers[(i & 0x0F00) >> 8] = randomNumber; }; // Cxkk - RND Vx, byte
+    opcodeMap[0xD000] = [this](int i) // DRW Vx, Vy, nibble
+    { 
+        short x = registers[(i & 0x0F00) >> 8];
+        short y = registers[(i & 0x00F0) >> 4];
+        short height = i & 0x000F;
+        short sprite;
+
+        flagRegister = 0;
+        for(short yLine = 0; yLine < height; yLine++)
+        {   
+            sprite = memory[iRegister + yLine];
+            for(short xLine = 0; xLine < 8; xLine++)
+            {
+                if(((sprite >> (7 - xLine)) & 1) == 1)
+                {
+                    if(pixels[(x + xLine) + ((y + yLine) * 64)] == 1)
+                    {
+                        flagRegister = 1;
+                    }
+                    pixels[(x + xLine) + ((y + yLine) * 64)] ^= 1;
+                }
+            }
+        }
+    };
+    opcodeMap[0xE000] = [this](int i) { opcodeMapE[i & 0x00FF]((i & 0x0F00) >> 8); }; 
+    opcodeMap[0xF000] = [this](int i) { opcodeMapF[i & 0x00FF]((i & 0x0F00) >> 8); };
+
+    // Sub Maps
     opcodeMap0[0x00E0] = [this] { memset(pixels, 0, 64 * 32); }; // CLS
     opcodeMap0[0x00EE] = [this] { pc = stack.top(); stack.pop(); }; // RET
 
@@ -121,43 +164,6 @@ void Chip8::initOpCodes()
         }
     };
 
-    opcodeMap[0x0000] = [this](int i) { opcodeMap0[i](); };
-    opcodeMap[0x1000] = [this](int i) { pc = i; }; // JP addr
-    opcodeMap[0x2000] = [this](int i) { stack.push(pc); pc = i; }; // CALL addr
-    opcodeMap[0x3000] = [this](int i) { if(registers[(i & 0x0F00) >> 8] == (i & 0x00FF)) pc += 2; }; // SE Vx, byte
-    opcodeMap[0x4000] = [this](int i) { if(registers[(i & 0x0F00) >> 8] != (i & 0x00FF)) pc += 2; }; // SNE Vx, byte
-    opcodeMap[0x5000] = [this](int i) { if(registers[(i & 0x0F00) >> 8] == registers[(i & 0x00F0) >> 4]) pc += 2; }; // SE Vx, Vy
-    opcodeMap[0x6000] = [this](int i) { registers[(i & 0x0F00) >> 8] = i & 0x00FF; }; // LD Vx, byte
-    opcodeMap[0x7000] = [this](int i) { registers[(i & 0x0F00) >> 8] += i & 0x00FF; }; // ADD Vx, byte
-   // opcodeMap[0x8000] = [this](int i) { opcodeMap8[i & 0x000F](i & 0x0F00 >> 8, i & 0x00F0 >> 4); };
-    opcodeMap[0x9000] = [this](int i) { if(registers[(i & 0x0F00) >> 8] != registers[(i & 0x00F0) >> 4]) pc += 2; }; // SNE Vx, Vy
-    opcodeMap[0xA000] = [this](int i) { iRegister = i & 0x0FFF; }; // LD I, addr
-    opcodeMap[0xB000] = [this](int i) { pc = (i & 0x0FFF) + registers[0]; }; // JP V0, addr
-    opcodeMap[0xC000] = [this](int i) { int randomNumber = (rand() % 255) & (i & 0x00FF); registers[(i & 0x0F00) >> 8] = randomNumber; }; // Cxkk - RND Vx, byte
-    opcodeMap[0xD000] = [this](int i) // DRW Vx, Vy, nibble
-    { 
-        short x = registers[(i & 0x0F00) >> 8];
-        short y = registers[(i & 0x00F0) >> 4];
-        short height = i & 0x000F;
-        short sprite;
-
-        flagRegister = 0;
-        for(short yLine = 0; yLine < height; yLine++)
-        {   
-            sprite = memory[iRegister + yLine];
-            for(short xLine = 0; xLine < 8; xLine++)
-            {
-                if(((sprite >> (7 - xLine)) & 1) == 1)
-                {
-                    if(pixels[(x + xLine) + ((y + yLine) * 64)] == 1)
-                    {
-                        flagRegister = 1;
-                    }
-                    pixels[(x + xLine) + ((y + yLine) * 64)] ^= 1;
-                }
-            }
-        }
-    };
-   // opcodeMap[0xE000] = [this](int i) { }; 
-    opcodeMap[0xF000] = [this](int i) { opcodeMapF[i & 0x00FF]((i & 0x0F00) >> 8); };
+    opcodeMapE[0x009E] = [this](int x) { if(keys[x] == 1) pc += 2; };
+    opcodeMapE[0x00A1] = [this](int x) { if(keys[x] != 1) pc += 2; };
 }

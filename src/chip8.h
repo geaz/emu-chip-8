@@ -28,6 +28,7 @@ class Chip8
         unsigned short iRegister = 0; // 1 16-Bit Register (short = 2 byte = 16 bit)
 
         unsigned char pixels[64 * 32]; // state of the display pixels
+        unsigned char keys[16];
 
         unsigned char timerDelay = 0;
         unsigned char timerSound = 0; 
@@ -44,7 +45,8 @@ class Chip8
         std::map<int, std::function<void(const int)>> opcodeMap;
         std::map<int, std::function<void()>> opcodeMap0;        
         std::map<int, std::function<void(const int, const int)>> opcodeMap8;        
-        std::map<int, std::function<void(const int)>> opcodeMapF;
+        std::map<int, std::function<void(const int)>> opcodeMapF;     
+        std::map<int, std::function<void(const int)>> opcodeMapE;
 
         unsigned char chip8Fontset[80] =
         { 
