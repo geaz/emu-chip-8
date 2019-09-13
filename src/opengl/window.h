@@ -13,10 +13,10 @@
 class Window
 {
     public:        
-        Window(const char* title, const int width, const int height);
+        Window(char* title, const int width, const int height);
         
         void setClearColor(const GLfloat red, const GLfloat green, const GLfloat blue, const GLfloat alpha) const;
-        void startLoop() const;
+        void startLoop();
 
         bool Window::addRowDefinition(const GridDefinition rowDefinition);
         bool Window::addColumnDefinition(const GridDefinition columnDefinition);
@@ -32,8 +32,12 @@ class Window
         void handleKeys(const int key, const int scancode, const int action, const int mods) const;
         std::vector<Screen*> getScreensInRow(const int row) const;
         int getMaxRowIndex() const;
+        void calculateFPS();
 
         GLFWwindow* window;
+        int framesCounter = 0;
+        double lastLoopTime = 0;
+        char* title;
         std::vector<Screen*> screenVec;
 };
 
