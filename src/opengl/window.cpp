@@ -6,7 +6,7 @@
 // Init Window Pointer for OpenGL callbacks
 Window* Window::windowPointer = NULL;
 
-Window::Window(const char* title, const int width, const int height)
+Window::Window(char* title, const int width, const int height) : title(title)
 {
     // Store Pointer for OpenGL callbacks
     windowPointer = this;
@@ -27,6 +27,7 @@ Window::Window(const char* title, const int width, const int height)
     }
     
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(0);
     glfwSetFramebufferSizeCallback(window, 
         [](GLFWwindow *window, int width, int height) 
         { 
@@ -51,12 +52,13 @@ void Window::setClearColor(const GLfloat red, const GLfloat green, const GLfloat
     glClearColor(red, green, blue, alpha);
 }
 
-void Window::startLoop() const
+void Window::startLoop()
 {
     while(!glfwWindowShouldClose(window))
-    {
-        glClear(GL_COLOR_BUFFER_BIT);
+    {        
+        calculateFPS();
         
+        glClear(GL_COLOR_BUFFER_BIT);
         for(Screen* screen : screenVec)
         {
             screen->render();
@@ -185,4 +187,24 @@ std::vector<Screen*> Window::getScreensInRow(const int row) const
     std::sort(screensInRow.begin(), screensInRow.end(), columnCompare);    
 
     return screensInRow;
+}
+
+void Window::calculateFPS()
+{
+    if(lastLoopTime == 0) lastLoopTime = glfwGetTime();
+
+    framesCounter++;
+    double currentTime = glfwGetTime();
+    double delta = currentTime - lastLoopTime;
+    if(delta >= 1.0) // Last count was more than 1 sec ago
+    {
+        int fps = (int)(framesCounter / delta);
+
+        std::stringstream ss;
+        ss << title << " " << "(FPS: " << fps << ")";
+
+        glfwSetWindowTitle(window, ss.str().c_str());
+        framesCounter = 0;
+        lastLoopTime = currentTime;
+    }
 }
