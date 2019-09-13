@@ -1,5 +1,5 @@
 #include <stdlib.h> 
-#include <time.h>
+#include <ctime>
 
 #include "chip8.h"
 #include "helper/string_helper.h"
@@ -25,19 +25,36 @@ void Chip8::loadRom(Rom rom)
     nextOpcode = memory[pc] << 8 | memory[pc+1];
 }
 
+void Chip8::togglePause()
+{
+    paused = !paused;
+    if(paused) clock.Reset();
+}
+
 void Chip8::processCycle()
 {
-    if(!opcodeError && (!paused || step))
+    int delayCycles = step ? 1 : clock.CatchUpTimerCycles(frequency);
+    if(timerDelay > 0) timerDelay = timerDelay - delayCycles < 0 ? 0 : timerDelay - delayCycles; 
+    if(timerSound > 0) timerSound = timerSound - delayCycles < 0 ? 0 : timerSound - delayCycles;
+
+    int cycles = step ? 1 : clock.CatchUpChipCycles(frequency);
+    if(!opcodeError && (!paused || step) && cycles > 0)
     {
         try
         {
-            currentOpcode = nextOpcode;       
-            pc += 2; // Increment PC before executing Opcode function
-            auto opcodeFunc = opcodeMap[currentOpcode & 0xF000];
-            opcodeFunc(currentOpcode & 0x0FFF);
+            for(int i = 0; i < cycles; i++)
+            {
+                currentOpcode = nextOpcode;       
+                pc += 2; // Increment PC before executing Opcode function
+                auto opcodeFunc = opcodeMap[currentOpcode & 0xF000];
+                opcodeFunc(currentOpcode & 0x0FFF);
 
-            nextOpcode = memory[pc] << 8 | memory[pc+1];
-            step = false;
+                nextOpcode = memory[pc] << 8 | memory[pc+1];
+                step = false;
+
+                if(drawSprite) break;
+            }     
+            drawSprite = false;     
         }
         catch(const std::bad_function_call& e)
         {
@@ -98,6 +115,7 @@ void Chip8::initOpCodes()
                 }
             }
         }
+        drawSprite = true;
     };
     opcodeMap[0xE000] = [this](int i) { opcodeMapE[i & 0x00FF]((i & 0x0F00) >> 8); }; 
     opcodeMap[0xF000] = [this](int i) { opcodeMapF[i & 0x00FF]((i & 0x0F00) >> 8); };

@@ -17,7 +17,8 @@ set(EMU_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/screens/chip8_screen.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/screens/memory_screen.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/screens/register_screen.h
-
+    
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/clock.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/rom.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/chip8.h
 )
@@ -34,6 +35,7 @@ set(EMU_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/screens/memory_screen.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/screens/register_screen.cpp
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/clock.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/rom.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/chip8.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp

@@ -7,6 +7,7 @@
 #include <stack> 
 
 #include "rom.h"
+#include "clock.h"
 
 class Chip8
 {
@@ -14,6 +15,7 @@ class Chip8
         Chip8();
 
         void loadRom(const Rom rom);
+        void togglePause();
         void processCycle();
 
         std::stack<int> stack;
@@ -34,14 +36,19 @@ class Chip8
         unsigned char timerSound = 0; 
 
         int currentOpcode = 0, nextOpcode = 0;
+        bool drawSprite = false;
         bool opcodeError = false;
         bool paused = true;
         bool step = false;
+
+        int frequency = 500; // 500Hz
+        int timerFrequency = 60; // 60Hz
 
     private:
         void clearMemAndRegisters();
         void initOpCodes();
 
+        Clock clock;
         std::map<int, std::function<void(const int)>> opcodeMap;
         std::map<int, std::function<void()>> opcodeMap0;        
         std::map<int, std::function<void(const int, const int)>> opcodeMap8;        
