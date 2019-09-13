@@ -16,7 +16,8 @@ class Screen {
    public:
 
       Screen(int row,  int column) : row(row), column(column),
-           screenShader("shaders\\screen.vshader", "shaders\\screen.fshader")
+           screenShader("shaders\\screen.vshader", "shaders\\screen.fshader"),
+           font(ResourceManager::LoadFont("Minecraft", "Minecraft.ttf"))
       {          
          glGenVertexArrays(1, &VAO);
          glGenBuffers(1, &VBO);
@@ -33,7 +34,6 @@ class Screen {
 
       void drawText(float x, float y, std::string text, Color color)
       {
-         Font font = ResourceManager::LoadFont("Minecraft", "Minecraft.ttf");
          font.renderText(x + startX, y + startY, text.c_str(), color);
       }      
 
@@ -59,10 +59,6 @@ class Screen {
          shader.setMatrix4("projection", projection);
          
          glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-         glBindBuffer(GL_ARRAY_BUFFER, 0);
-         glBindVertexArray(0);
       }
 
       void setClearColor(Color color)
@@ -100,6 +96,7 @@ class Screen {
          drawRect(vertices, indices, sizeof(vertices), sizeof(indices), screenShader);
       }
 
+      Font font;
       Shader screenShader;
       unsigned int VBO, VAO, EBO;
 };
