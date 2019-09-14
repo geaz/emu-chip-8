@@ -27,7 +27,6 @@ Window::Window(char* title, const int width, const int height) : title(title)
     }
     
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(0);
     glfwSetFramebufferSizeCallback(window, 
         [](GLFWwindow *window, int width, int height) 
         { 
@@ -54,11 +53,11 @@ void Window::setClearColor(const GLfloat red, const GLfloat green, const GLfloat
 
 void Window::startLoop()
 {
+    glClear(GL_COLOR_BUFFER_BIT);
     while(!glfwWindowShouldClose(window))
     {        
         calculateFPS();
         
-        glClear(GL_COLOR_BUFFER_BIT);
         for(Screen* screen : screenVec)
         {
             screen->render();

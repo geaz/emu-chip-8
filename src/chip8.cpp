@@ -33,12 +33,12 @@ void Chip8::togglePause()
 
 void Chip8::processCycle()
 {
-    int delayCycles = step ? 1 : clock.CatchUpTimerCycles(frequency);
-    if(timerDelay > 0) timerDelay = timerDelay - delayCycles < 0 ? 0 : timerDelay - delayCycles; 
-    if(timerSound > 0) timerSound = timerSound - delayCycles < 0 ? 0 : timerSound - delayCycles;
+    int timerCycles = step ? 1 : clock.CatchUpTimerCycles(timerFrequency);
+    if(timerDelay > 0) timerDelay = timerDelay - timerCycles < 0 ? 0 : timerDelay - timerCycles; 
+    if(timerSound > 0) timerSound = timerSound - timerCycles < 0 ? 0 : timerSound - timerCycles;
 
     int cycles = step ? 1 : clock.CatchUpChipCycles(frequency);
-    if(!opcodeError && (!paused || step) && cycles > 0)
+    if(!opcodeError && (!paused || step) && cycles > 0 && waitKey == -1)
     {
         try
         {
@@ -52,9 +52,9 @@ void Chip8::processCycle()
                 nextOpcode = memory[pc] << 8 | memory[pc+1];
                 step = false;
 
-                if(drawSprite) break;
+                if(interrupt) break;
             }     
-            drawSprite = false;     
+            interrupt = false;     
         }
         catch(const std::bad_function_call& e)
         {
@@ -67,10 +67,10 @@ void Chip8::processCycle()
 
 void Chip8::clearMemAndRegisters()
 {
-    memset(memory, 0, memorySize);
-    memset(pixels, 0, 64 * 32);
+    memset(keys, 0, 16);
     memset(registers, 0, 15);
-    memset(keys, 0, 15);
+    memset(pixels, 0, 64 * 32);
+    memset(memory, 0, memorySize);
     memcpy(memory, chip8Fontset, sizeof(chip8Fontset));
 }
 
@@ -115,7 +115,7 @@ void Chip8::initOpCodes()
                 }
             }
         }
-        drawSprite = true;
+        interrupt = true;
     };
     opcodeMap[0xE000] = [this](int i) { opcodeMapE[i & 0x00FF]((i & 0x0F00) >> 8); }; 
     opcodeMap[0xF000] = [this](int i) { opcodeMapF[i & 0x00FF]((i & 0x0F00) >> 8); };
@@ -156,7 +156,7 @@ void Chip8::initOpCodes()
     };
 
     opcodeMapF[0x007] = [this](int x) { registers[x] = timerDelay; };
-    //opcodeMapF[0x00A] = [this](int x) { register[x] = timerDelay; }; // KEY PRESS WAIT
+    opcodeMapF[0x00A] = [this](int x) { waitKey = x; interrupt = true; };
     opcodeMapF[0x015] = [this](int x) { timerDelay = registers[x]; };
     opcodeMapF[0x018] = [this](int x) { timerSound = registers[x]; };
     opcodeMapF[0x01E] = [this](int x) { iRegister += registers[x]; };
@@ -182,6 +182,6 @@ void Chip8::initOpCodes()
         }
     };
 
-    opcodeMapE[0x009E] = [this](int x) { if(keys[x] == 1) pc += 2; };
-    opcodeMapE[0x00A1] = [this](int x) { if(keys[x] != 1) pc += 2; };
+    opcodeMapE[0x009E] = [this](int x) { if(keys[registers[x]] == 1) pc += 2; };
+    opcodeMapE[0x00A1] = [this](int x) { if(keys[registers[x]] != 1) pc += 2; };
 }

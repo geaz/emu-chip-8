@@ -36,7 +36,7 @@ class Chip8
         unsigned char timerSound = 0; 
 
         int currentOpcode = 0, nextOpcode = 0;
-        bool drawSprite = false;
+        char waitKey = -1;
         bool opcodeError = false;
         bool paused = true;
         bool step = false;
@@ -49,6 +49,7 @@ class Chip8
         void initOpCodes();
 
         Clock clock;
+        bool interrupt = false;
         std::map<int, std::function<void(const int)>> opcodeMap;
         std::map<int, std::function<void()>> opcodeMap0;        
         std::map<int, std::function<void(const int, const int)>> opcodeMap8;        

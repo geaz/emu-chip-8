@@ -1,3 +1,6 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "chip8_screen.h"
 
 Chip8Screen::Chip8Screen(int row, int column, Chip8* chip8) : Screen(row, column), chip8(chip8),
@@ -45,4 +48,18 @@ void Chip8Screen::drawPixelAt(const int x, const int y)
         0, 3, 2
     };
     drawRect(vertices, indices, sizeof(vertices), sizeof(indices), pixelShader);
+}
+
+
+void Chip8Screen::handleKeys(const int key, const int scancode, const int action, const int mods)
+{
+    if(keyMap.find(key) != keyMap.end())
+    {
+        chip8->keys[keyMap[key]] = action == GLFW_PRESS || action == GLFW_REPEAT ? 1 : 0;
+        if(action == GLFW_PRESS && chip8->waitKey != -1)
+        {
+            chip8->registers[chip8->waitKey] = keyMap[key];
+            chip8->waitKey = -1;
+        }
+    }
 }
