@@ -100,7 +100,7 @@ void Chip8::initOpCodes()
         short sprite;
 
         flagRegister = 0;
-        for(short yLine = 0; yLine < height; yLine++)
+        for(short yLine = 0; yLine < height && (yLine + y) < 32; yLine++)
         {   
             sprite = memory[iRegister + yLine];
             for(short xLine = 0; xLine < 8; xLine++)
