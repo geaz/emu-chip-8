@@ -35,7 +35,7 @@ void Chip8::processCycle()
 {
     int timerCycles = step ? 1 : clock.CatchUpTimerCycles(timerFrequency);
     if(timerDelay > 0) timerDelay = timerDelay - timerCycles < 0 ? 0 : timerDelay - timerCycles; 
-    if(timerSound > 0) timerSound = timerSound - timerCycles < 0 ? 0 : timerSound - timerCycles;
+    if(timerSound > 0) { timerSound = timerSound - timerCycles < 0 ? 0 : timerSound - timerCycles; std::cout << "BEEP!"; }
 
     int cycles = step ? 1 : clock.CatchUpChipCycles(frequency);
     if(!opcodeError && (!paused || step) && cycles > 0 && waitKey == -1)
@@ -141,8 +141,8 @@ void Chip8::initOpCodes()
     };
     opcodeMap8[0x0006] = [this](int x, int y) 
     { 
-        flagRegister = registers[x] & 0x0F;
-        registers[x] = (registers[x] & 0xF0) >> 1;
+        flagRegister = registers[x] & 0x1;
+        registers[x] = registers[x] / 2;
     };
     opcodeMap8[0x0007] = [this](int x, int y)
     { 
@@ -151,8 +151,8 @@ void Chip8::initOpCodes()
     };
     opcodeMap8[0x000E] = [this](int x, int y) 
     {
-        flagRegister = registers[x] & 0xF0;
-        registers[x] = (registers[x] & 0x0F) << 1;
+        flagRegister = registers[x] & 0x10;
+        registers[x] = registers[x] * 2;
     };
 
     opcodeMapF[0x007] = [this](int x) { registers[x] = timerDelay; };
@@ -163,9 +163,9 @@ void Chip8::initOpCodes()
     opcodeMapF[0x029] = [this](int x) { iRegister = registers[x] * 5; };
     opcodeMapF[0x033] = [this](int x) 
     { 
-        memory[iRegister] = registers[(x & 0x0F00) >> 8] / 100;
-        memory[iRegister + 1] = (registers[(x & 0x0F00) >> 8] / 10) % 10;
-        memory[iRegister + 2] = registers[(x & 0x0F00) >> 8] % 10;
+        memory[iRegister] = registers[x] / 100;
+        memory[iRegister + 1] = (registers[x] / 10) % 10;
+        memory[iRegister + 2] = registers[x] % 10;
     };
     opcodeMapF[0x055] = [this](int x) 
     { 
