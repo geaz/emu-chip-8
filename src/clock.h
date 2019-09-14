@@ -2,12 +2,13 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
+enum TimerType { CHIP, TIMER };
+
 class Clock
 {
     public:
         void Reset();
-        int CatchUpChipCycles(int frequency);
-        int CatchUpTimerCycles(int frequency);
+        int CatchUpCycles(int frequency,  TimerType timerType);
 
     private:
         long long lastCycleTimer = -1;

@@ -33,11 +33,11 @@ void Chip8::togglePause()
 
 void Chip8::processCycle()
 {
-    int timerCycles = step ? 1 : clock.CatchUpTimerCycles(timerFrequency);
+    int timerCycles = step ? 1 : clock.CatchUpCycles(timerFrequency, TIMER);
     if(timerDelay > 0) timerDelay = timerDelay - timerCycles < 0 ? 0 : timerDelay - timerCycles; 
     if(timerSound > 0) { timerSound = timerSound - timerCycles < 0 ? 0 : timerSound - timerCycles; std::cout << "BEEP!"; }
 
-    int cycles = step ? 1 : clock.CatchUpChipCycles(frequency);
+    int cycles = step ? 1 : clock.CatchUpCycles(frequency, CHIP);
     if(!opcodeError && (!paused || step) && cycles > 0 && waitKey == -1)
     {
         try
