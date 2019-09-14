@@ -3,6 +3,7 @@
 Chip8Screen::Chip8Screen(int row, int column, Chip8* chip8) : Screen(row, column), chip8(chip8),
     pixelShader("shaders\\screen.vshader", "shaders\\screen.fshader")
 { 
+    pixelShader.use();
     pixelShader.setVec4("clearColor", 0, 0, 255, 255);
 }
 

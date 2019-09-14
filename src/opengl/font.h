@@ -4,6 +4,7 @@
 
 #include "stb/stb_truetype.h"
 #include <glad/glad.h>
+#include <string>
 
 #include "shader.h"
 #include "structs.h"
@@ -14,7 +15,7 @@ class Font
         Font() { };
         Font(const char* fontPath);
 
-        void renderText(float x, float y, const char* text, const Color color);
+        void renderText(float x, float y, const std::string text, const Color color);
 
     private:        
         GLuint ftex;

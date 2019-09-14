@@ -80,35 +80,30 @@ class Shader
         void setBool(const std::string &name, bool value)
         {         
             int location = glGetUniformLocation(ID, name.c_str());
-            glUseProgram(ID); 
             glUniform1i(location, (int)value); 
         }
         
         void setInt(const std::string &name, int value)
         { 
             int location = glGetUniformLocation(ID, name.c_str());
-            glUseProgram(ID); 
             glUniform1i(location, value); 
         }
         
         void setFloat(const std::string &name, float value)
         { 
             int location = glGetUniformLocation(ID, name.c_str());
-            glUseProgram(ID); 
             glUniform1f(location, value); 
         }
 
         void setVec4(const std::string &name, float value1, float value2, float value3, float value4)
         {
             int location = glGetUniformLocation(ID, name.c_str());
-            glUseProgram(ID); 
             glUniform4f(location, value1, value2, value3, value4);
         }
 
         void setMatrix4(const std::string &name, const glm::mat4 &matrix)
         {
             int location = glGetUniformLocation(ID, name.c_str());
-            glUseProgram(ID); 
             glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
         }
         

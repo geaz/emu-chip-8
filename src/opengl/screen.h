@@ -63,6 +63,7 @@ class Screen {
 
       void setClearColor(Color color)
       {
+         screenShader.use();
          screenShader.setVec4("clearColor", color.red / 255.0f, color.green  / 255.0f, color.blue  / 255.0f, color.alpha  / 255.0f);
       }
 

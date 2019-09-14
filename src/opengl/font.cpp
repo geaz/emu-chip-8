@@ -6,6 +6,9 @@
 
 Font::Font(const char* fontPath)
 {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
@@ -33,19 +36,16 @@ Font::Font(const char* fontPath)
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Font::renderText(float x, float y, const char* text, const Color color)
+void Font::renderText(float x, float y, const std::string text, const Color color)
 {    
-    glBindVertexArray(VAO);
     glBindTexture(GL_TEXTURE_2D, ftex);
     
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
     
+    glBindVertexArray(VAO);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     auto projection = glm::ortho(
         0.0f,         
@@ -56,12 +56,12 @@ void Font::renderText(float x, float y, const char* text, const Color color)
     textShader.setVec4("textColor", color.red/255, color.green/255, color.blue/255, color.alpha/255);
     textShader.setMatrix4("projection", projection);
 
-    while (*text) 
+    for(unsigned int i = 0; i < text.length(); i++)
     {
-        if (*text >= 32 && *text < 128) 
+        if (text[i] >= 32 && text[i] < 128) 
         {
             stbtt_aligned_quad q;
-            stbtt_GetBakedQuad(charData, 512, 512, *text-32, &x, &y, &q, 1);
+            stbtt_GetBakedQuad(charData, 512, 512, text[i]-32, &x, &y, &q, 1);
             
             GLfloat vertices[6][4] = 
             {
@@ -77,10 +77,5 @@ void Font::renderText(float x, float y, const char* text, const Color color)
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
-        ++text;
-    }
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    }        
 }
