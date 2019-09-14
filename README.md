@@ -15,6 +15,12 @@ Usage example (Windows):
 emu-chip-8.exe roms/BRIX
 ```
 
+The emulator is in **pause** state on start.  
+Use **p** to pause/play.  
+Use **n** to step to next operation.
+
+![emu-chip-8-gif](https://raw.githubusercontent.com/geaz/emu-chip-8/master/emu-chip-8.gif)
+
 ## Ressources
 - http://learnopengl.com
 - http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
