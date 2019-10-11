@@ -7,8 +7,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "structs.h"
-#include "screen.h"
+#include "structs.hpp"
+#include "screen.hpp"
 
 class Window
 {

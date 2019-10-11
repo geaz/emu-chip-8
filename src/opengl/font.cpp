@@ -1,8 +1,8 @@
 #include <fstream>
 #include <gtc/matrix_transform.hpp>
 
-#include "font.h"
-#include "resource_manager.h"
+#include "font.hpp"
+#include "resource_manager.hpp"
 
 Font::Font(const char* fontPath)
 {

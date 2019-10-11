@@ -1,6 +1,6 @@
 #include <fstream>
 
-#include "rom.h"
+#include "rom.hpp"
 
 Rom::Rom(std::string romPath) : romPath(romPath)
 {

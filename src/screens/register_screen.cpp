@@ -2,8 +2,8 @@
 #include <iomanip>
 #include <algorithm>
 
-#include "register_screen.h"
-#include "../helper/string_helper.h"
+#include "register_screen.hpp"
+#include "../helper/string_helper.hpp"
 
 RegisterScreen::RegisterScreen(int row, int column, Chip8* chip8) : Screen(row, column), chip8(chip8)
 {     

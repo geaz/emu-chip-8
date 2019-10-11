@@ -1,4 +1,4 @@
-#include "resource_manager.h"
+#include "resource_manager.hpp"
 
 // Instantiate static variables
 int ResourceManager::ViewportWidth;

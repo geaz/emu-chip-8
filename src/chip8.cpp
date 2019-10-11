@@ -1,8 +1,8 @@
 #include <stdlib.h> 
 #include <ctime>
 
-#include "chip8.h"
-#include "helper/string_helper.h"
+#include "chip8.hpp"
+#include "helper/string_helper.hpp"
 
 Chip8::Chip8()
 {

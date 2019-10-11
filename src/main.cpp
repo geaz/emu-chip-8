@@ -6,14 +6,14 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "opengl/window.h"
-#include "opengl/structs.h"
+#include "opengl/window.hpp"
+#include "opengl/structs.hpp"
 
-#include "rom.h"
-#include "chip8.h"
-#include "screens/chip8_screen.h"
-#include "screens/memory_screen.h"
-#include "screens/register_screen.h"
+#include "rom.hpp"
+#include "chip8.hpp"
+#include "screens/chip8_screen.hpp"
+#include "screens/memory_screen.hpp"
+#include "screens/register_screen.hpp"
 
 int main(int argc, char* argv[]) 
 {

@@ -6,8 +6,8 @@
 #include <functional>
 #include <stack> 
 
-#include "rom.h"
-#include "clock.h"
+#include "rom.hpp"
+#include "clock.hpp"
 
 class Chip8
 {

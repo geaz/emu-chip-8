@@ -2,8 +2,8 @@
 #ifndef MEMORYSCREEN_H
 #define MEMORYSCREEN_H
 
-#include "../opengl/screen.h"
-#include "../chip8.h"
+#include "../opengl/screen.hpp"
+#include "../chip8.hpp"
 
 class MemoryScreen : public Screen
 {   

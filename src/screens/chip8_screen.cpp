@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "chip8_screen.h"
+#include "chip8_screen.hpp"
 
 Chip8Screen::Chip8Screen(int row, int column, Chip8* chip8) : Screen(row, column), chip8(chip8),
     pixelShader("shaders\\screen.vshader", "shaders\\screen.fshader")
@@ -32,16 +32,16 @@ void Chip8Screen::draw()
 */
 void Chip8Screen::drawPixelAt(const int x, const int y)
 {
-    int onePixelX = (endX - startX) / 64;
-    int onePixelY = (endY - startY) / 32;
+    int onePixelX = (int)(endX - startX) / 64;
+    int onePixelY = (int)(endY - startY) / 32;
     int scaledX = onePixelX * x;
     int scaledY = onePixelY * y;
 
     float vertices[] = {
-        scaledX, scaledY, //Top Left
-        scaledX + onePixelX, scaledY, //Top Right
-        scaledX + onePixelX, scaledY + onePixelY, // Bottom Right
-        scaledX, scaledY + onePixelY // Bottom Left
+        (float)scaledX, (float)scaledY, //Top Left
+        (float)scaledX + onePixelX, (float)scaledY, //Top Right
+        (float)scaledX + onePixelX, (float)scaledY + onePixelY, // Bottom Right
+        (float)scaledX, (float)scaledY + onePixelY // Bottom Left
     };
     unsigned int indices[] = {
         0, 1, 2,

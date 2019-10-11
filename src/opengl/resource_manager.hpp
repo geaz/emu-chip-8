@@ -5,8 +5,8 @@
 #include <map>
 #include <string>
 
-#include "shader.h"
-#include "font.h"
+#include "shader.hpp"
+#include "font.hpp"
 
 class ResourceManager
 {

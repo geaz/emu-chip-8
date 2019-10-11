@@ -2,8 +2,8 @@
 #ifndef REGISTERSCREEN_H
 #define REGISTERSCREEN_H
 
-#include "../opengl/screen.h"
-#include "../chip8.h"
+#include "../opengl/screen.hpp"
+#include "../chip8.hpp"
 
 class RegisterScreen : public Screen
 {   

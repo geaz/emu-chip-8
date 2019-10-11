@@ -5,8 +5,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "memory_screen.h"
-#include "../helper/string_helper.h"
+#include "memory_screen.hpp"
+#include "../helper/string_helper.hpp"
 
 MemoryScreen::MemoryScreen(int row, int column, Chip8* chip8) : Screen(row, column), chip8(chip8)
 {     

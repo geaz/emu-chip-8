@@ -7,10 +7,10 @@
 #include <fstream>
 #include <gtc/matrix_transform.hpp>
 
-#include "resource_manager.h"
-#include "shader.h"
-#include "font.h"
-#include "structs.h"
+#include "resource_manager.hpp"
+#include "shader.hpp"
+#include "font.hpp"
+#include "structs.hpp"
 
 class Screen {
    public:

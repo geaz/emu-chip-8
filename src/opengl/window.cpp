@@ -1,7 +1,7 @@
 #include <algorithm>
 
-#include "window.h"
-#include "resource_manager.h"
+#include "window.hpp"
+#include "resource_manager.hpp"
 
 // Init Window Pointer for OpenGL callbacks
 Window* Window::windowPointer = NULL;

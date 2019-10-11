@@ -1,6 +1,6 @@
 #include <chrono>
 
-#include "clock.h"
+#include "clock.hpp"
 
 void Clock::Reset()
 {

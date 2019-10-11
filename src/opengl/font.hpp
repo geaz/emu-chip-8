@@ -6,8 +6,8 @@
 #include <glad/glad.h>
 #include <string>
 
-#include "shader.h"
-#include "structs.h"
+#include "shader.hpp"
+#include "structs.hpp"
 
 class Font
 {
