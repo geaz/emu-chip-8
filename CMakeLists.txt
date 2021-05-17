@@ -4,23 +4,23 @@ project(emu-chip-8 VERSION 0.1.0)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-GLFW.txt)
 
 set(EMU_HEADERS
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/helper/string_helper.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/helper/string_helper.hpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/stb/stb_truetype.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/resource_manager.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/structs.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/font.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/shader.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/resource_manager.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/structs.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/font.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/shader.hpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/window.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/screen.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/screens/chip8_screen.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/screens/memory_screen.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/screens/register_screen.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/window.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/opengl/screen.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/screens/chip8_screen.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/screens/memory_screen.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/screens/register_screen.hpp
     
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/clock.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/rom.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/chip8.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/clock.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/rom.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/chip8.hpp
 )
 
 set(EMU_SOURCES
